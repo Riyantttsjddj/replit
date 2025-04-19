@@ -1,0 +1,39 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install cython==0.29.33 buildozer
+          sudo apt-get update
+          sudo apt-get install -y git zip unzip openjdk-11-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+          sudo apt-get install -y libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
+          sudo apt-get install -y libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev libfreetype6-dev
+          sudo apt-get install -y python3-setuptools build-essential libsqlite3-dev
+      
+      - name: Build APK with Buildozer
+        run: |
+          buildozer android debug
+          
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: ytdownloader-apk
+          path: bin/*.apk
