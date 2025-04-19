@@ -1,0 +1,22 @@
+workflows:
+  android-build:
+    name: Build Android APK
+    instance_type: linux
+    environment:
+      python: 3.9
+    scripts:
+      - name: Install dependencies
+        script: |
+          pip3 install --upgrade pip
+          pip3 install cython==0.29.33
+          pip3 install buildozer
+          sudo apt-get update
+          sudo apt-get install -y git zip unzip openjdk-11-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+          sudo apt-get install -y libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
+          sudo apt-get install -y libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev libfreetype6-dev
+          sudo apt-get install -y python3-setuptools build-essential libsqlite3-dev
+      - name: Build Android APK
+        script: |
+          buildozer -v android debug
+    artifacts:
+      - bin/*.apk

@@ -1,0 +1,228 @@
+#:kivy 2.0.0
+
+<DownloadItem>:
+    orientation: 'vertical'
+    size_hint_y: None
+    height: 120
+    padding: 10
+    spacing: 5
+    canvas.before:
+        Color:
+            rgba: 0.95, 0.95, 0.95, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    
+    BoxLayout:
+        orientation: 'horizontal'
+        spacing: 10
+        
+        # Left side - info
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_x: 0.7
+            
+            Label:
+                text: root.title
+                font_size: 16
+                text_size: self.width, None
+                halign: 'left'
+                valign: 'top'
+                color: 0.1, 0.1, 0.1, 1
+                shorten: True
+                shorten_from: 'right'
+                
+            Label:
+                text: root.date
+                font_size: 14
+                text_size: self.width, None
+                halign: 'left'
+                valign: 'bottom'
+                color: 0.5, 0.5, 0.5, 1
+        
+        # Right side - actions
+        Button:
+            text: "Play"
+            size_hint_x: 0.3
+            on_release: root.play_video()
+    
+    Widget:
+        size_hint_y: None
+        height: 1
+        canvas:
+            Color:
+                rgba: 0.8, 0.8, 0.8, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+<HomeScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 15
+        
+        BoxLayout:
+            size_hint_y: None
+            height: 50
+            orientation: 'horizontal'
+            
+            Label:
+                text: 'YouTube Downloader'
+                font_size: 22
+                size_hint_x: 0.7
+                
+            Button:
+                text: 'History'
+                size_hint_x: 0.3
+                on_release: root.go_to_history()
+        
+        # URL Input section
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: 120
+            spacing: 10
+            
+            TextInput:
+                id: url_input
+                hint_text: "Paste YouTube URL here"
+                multiline: False
+                font_size: 16
+                size_hint_y: None
+                height: 50
+                padding: [10, 10, 10, 0]
+            
+            Button:
+                text: "Check URL"
+                size_hint_y: None
+                height: 50
+                background_color: 0.3, 0.6, 0.9, 1
+                on_release: root.check_url()
+        
+        Label:
+            id: url_status
+            text: ""
+            size_hint_y: None
+            height: 30
+            color: 0.3, 0.6, 0.9, 1
+        
+        # Video info section
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: 80
+            spacing: 5
+            
+            Label:
+                id: video_title
+                text: ""
+                font_size: 16
+                text_size: self.width, None
+                halign: 'left'
+                size_hint_y: None
+                height: 40
+                
+            Label:
+                id: video_duration
+                text: ""
+                font_size: 14
+                text_size: self.width, None
+                halign: 'left'
+                size_hint_y: None
+                height: 30
+                color: 0.5, 0.5, 0.5, 1
+        
+        # Download section
+        BoxLayout:
+            id: download_section
+            orientation: 'vertical'
+            spacing: 15
+            opacity: 0
+            disabled: True
+            
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: 50
+                spacing: 10
+                
+                Label:
+                    text: "Quality:"
+                    size_hint_x: 0.3
+                
+                Spinner:
+                    id: quality_spinner
+                    text: "Best"
+                    values: root.quality_options
+                    size_hint_x: 0.7
+            
+            Button:
+                id: download_button
+                text: "Download"
+                size_hint_y: None
+                height: 60
+                background_color: 0.2, 0.7, 0.3, 1
+                on_release: root.download_video()
+            
+            Label:
+                text: root.current_status
+                size_hint_y: None
+                height: 30
+            
+            ProgressBar:
+                id: progress_bar
+                value: root.download_progress
+                max: 100
+                size_hint_y: None
+                height: 20
+        
+        # Filler space
+        Widget:
+            size_hint_y: 1
+
+<HistoryScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 15
+        
+        BoxLayout:
+            size_hint_y: None
+            height: 50
+            orientation: 'horizontal'
+            
+            Label:
+                text: 'Download History'
+                font_size: 22
+                size_hint_x: 0.7
+                
+            Button:
+                text: 'Back'
+                size_hint_x: 0.3
+                on_release: root.go_to_home()
+        
+        BoxLayout:
+            size_hint_y: None
+            height: 50
+            orientation: 'horizontal'
+            spacing: 10
+            
+            Widget:
+                size_hint_x: 0.6
+                
+            Button:
+                text: 'Clear History'
+                size_hint_x: 0.4
+                on_release: root.clear_history()
+        
+        ScrollView:
+            do_scroll_x: False
+            
+            GridLayout:
+                id: history_container
+                cols: 1
+                spacing: 10
+                padding: 10
+                size_hint_y: None
+                height: self.minimum_height
